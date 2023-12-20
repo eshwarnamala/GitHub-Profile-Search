@@ -1,23 +1,36 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import axios from 'axios';
+import ProfileSearch from './components/profilesearch';
+import UserProfile from './components/userprofile';
 
 function App() {
+  const [userData, setUserData] = useState(null);
+
+  const searchProfile = async (username) => {
+    try {
+      const response = await axios.get(`https://beaded-spotted-helicopter.glitch.me/github-profiles/${username}`);
+      setUserData(response.data);
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+      setUserData(null);
+    }
+  };
+
   return (
+    <div
+      style={{
+        backgroundColor:'peach',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: '100vh',
+      }}>
+    
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Github Profile Search</h1>
+      <ProfileSearch searchProfile={searchProfile} />
+      {userData && <UserProfile userData={userData} />}
+    </div>
     </div>
   );
 }
